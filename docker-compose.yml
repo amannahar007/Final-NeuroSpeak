@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"  # HTTP/WebSocket
+      - "9000:9000"  # TCP for ESP32
+    volumes:
+      - ./backend/words_config.json:/app/words_config.json
+    environment:
+      - PYTHONUNBUFFERED=1
+    restart: unless-stopped
+    networks:
+      - neurospeak
+
+  dashboard:
+    build:
+      context: ./dashboard
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"  # Nginx serving React build
+    depends_on:
+      - backend
+    restart: unless-stopped
+    networks:
+      - neurospeak
+
+networks:
+  neurospeak:
+    driver: bridge
