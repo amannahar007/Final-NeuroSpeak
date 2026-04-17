@@ -1,28 +1,17 @@
 {
-  "words": [
-    {
-      "word": "HELLO",
-      "priority": 3,
-      "conditions": [
-        {"sensor": "v1", "operator": ">", "value": 2200},
-        {"sensor": "v2", "operator": "<", "value": 1500}
-      ]
+  "idle_ranges": {
+    "v1": {
+      "min": -150.0,
+      "max": 150.0
     },
-    {
-      "word": "WATER",
-      "priority": 2,
-      "conditions": [
-        {"sensor": "v2", "operator": ">", "value": 2000}
-      ]
+    "v2": {
+      "min": -514.0,
+      "max": 518.0
     },
-    {
-      "word": "EMERGENCY",
-      "priority": 1,
-      "conditions": [
-        {"sensor": "v1", "operator": ">", "value": 3000},
-        {"sensor": "v2", "operator": ">", "value": 3000},
-        {"sensor": "v3", "operator": ">", "value": 3000}
-      ]
+    "v3": {
+      "min": -577.0,
+      "max": 584.0
     }
-  ]
+  },
+  "words": []
 }

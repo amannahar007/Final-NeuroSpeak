@@ -8,7 +8,7 @@
 // ===== CONFIGURATION =====
 const char* WIFI_SSID = "YOUR_WIFI_SSID";
 const char* WIFI_PASSWORD = "YOUR_WIFI_PASSWORD";
-const char* TCP_HOST = "192.168.1.100";  // Replace with your backend IP
+const char* TCP_HOST = "172.16.40.198";  // Replace with your backend IP
 const int TCP_PORT = 9000;
 
 // ADC pins for EMG sensors
@@ -39,6 +39,14 @@ WiFiClient client;
 
 // Hardware timer
 hw_timer_t* timer = NULL;
+
+// ===== HISTORY BUFFER =====
+const int HISTORY_SIZE = 512;
+struct Sample { int16_t c1, c2, c3; };
+Sample historyBuffer[HISTORY_SIZE];
+int historyIndex = 0;
+bool historyFull = false;
+bool was_connected = false;
 
 // ===== TIMER ISR =====
 void IRAM_ATTR onTimer() {
@@ -150,6 +158,31 @@ void loop() {
   // Ensure TCP connection
   connect_tcp();
   
+  bool current_connected = client.connected();
+  
+  if (current_connected && !was_connected) {
+    int count = historyFull ? HISTORY_SIZE : historyIndex;
+    int startIdx = historyFull ? historyIndex : 0;
+    
+    if (count > 0) {
+      Serial.println("Sending 1-second history backlog...");
+      char *burst = (char*)malloc((count * 20) + 1);
+      if (burst) {
+          int offset = 0;
+          for(int i = 0; i < count; i++) {
+              int idx = (startIdx + i) % HISTORY_SIZE;
+              // Safe append to allocated memory block
+              offset += snprintf(burst + offset, (count * 20) - offset, "%d,%d,%d\n", 
+                                 historyBuffer[idx].c1, historyBuffer[idx].c2, historyBuffer[idx].c3);
+          }
+          client.write((const uint8_t*)burst, offset);
+          free(burst);
+          Serial.println("Backlog burst transmitted.");
+      }
+    }
+  }
+  was_connected = current_connected;
+  
   // Process sample when ready
   if (sample_ready) {
     sample_ready = false;
@@ -169,8 +202,18 @@ void loop() {
       filtered[i] = (int)val;
     }
     
-    // Format and transmit over TCP
-    if (client.connected()) {
+    // Save to history ring buffer regardless of connection
+    historyBuffer[historyIndex].c1 = filtered[0];
+    historyBuffer[historyIndex].c2 = filtered[1];
+    historyBuffer[historyIndex].c3 = filtered[2];
+    historyIndex++;
+    if (historyIndex >= HISTORY_SIZE) {
+        historyIndex = 0;
+        historyFull = true;
+    }
+    
+    // Format and transmit over TCP in realtime
+    if (current_connected) {
       char buffer[64];
       snprintf(buffer, sizeof(buffer), "%d,%d,%d\n", 
                filtered[0], filtered[1], filtered[2]);
