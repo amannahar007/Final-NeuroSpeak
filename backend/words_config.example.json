@@ -1,0 +1,86 @@
+{
+  "words": [
+    {
+      "word": "EMERGENCY",
+      "priority": 1,
+      "conditions": [
+        {"sensor": "v1", "operator": ">", "value": 3000},
+        {"sensor": "v2", "operator": ">", "value": 3000},
+        {"sensor": "v3", "operator": ">", "value": 3000}
+      ]
+    },
+    {
+      "word": "WATER",
+      "priority": 2,
+      "conditions": [
+        {"sensor": "v2", "operator": ">", "value": 2000}
+      ]
+    },
+    {
+      "word": "HELLO",
+      "priority": 3,
+      "conditions": [
+        {"sensor": "v1", "operator": ">", "value": 2200},
+        {"sensor": "v2", "operator": "<", "value": 1500}
+      ]
+    },
+    {
+      "word": "YES",
+      "priority": 4,
+      "conditions": [
+        {"sensor": "v1", "operator": ">", "value": 2500},
+        {"sensor": "v3", "operator": ">", "value": 2500}
+      ]
+    },
+    {
+      "word": "NO",
+      "priority": 5,
+      "conditions": [
+        {"sensor": "v2", "operator": ">", "value": 2500},
+        {"sensor": "v3", "operator": "<", "value": 1500}
+      ]
+    },
+    {
+      "word": "HELP",
+      "priority": 6,
+      "conditions": [
+        {"sensor": "v1", "operator": ">", "value": 2800},
+        {"sensor": "v2", "operator": ">", "value": 1800},
+        {"sensor": "v2", "operator": "<", "value": 2500}
+      ]
+    },
+    {
+      "word": "STOP",
+      "priority": 7,
+      "conditions": [
+        {"sensor": "v3", "operator": ">", "value": 3000}
+      ]
+    },
+    {
+      "word": "FOOD",
+      "priority": 8,
+      "conditions": [
+        {"sensor": "v1", "operator": ">", "value": 1800},
+        {"sensor": "v1", "operator": "<", "value": 2200},
+        {"sensor": "v2", "operator": ">", "value": 1800}
+      ]
+    },
+    {
+      "word": "PAIN",
+      "priority": 9,
+      "conditions": [
+        {"sensor": "v1", "operator": ">", "value": 2000},
+        {"sensor": "v3", "operator": ">", "value": 2000}
+      ]
+    },
+    {
+      "word": "TIRED",
+      "priority": 10,
+      "conditions": [
+        {"sensor": "v1", "operator": "<", "value": 1500},
+        {"sensor": "v2", "operator": "<", "value": 1500},
+        {"sensor": "v3", "operator": "<", "value": 1500}
+      ]
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "words": [
+    {
+      "word": "HELLO",
+      "priority": 3,
+      "conditions": [
+        {"sensor": "v1", "operator": ">", "value": 2200},
+        {"sensor": "v2", "operator": "<", "value": 1500}
+      ]
+    },
+    {
+      "word": "WATER",
+      "priority": 2,
+      "conditions": [
+        {"sensor": "v2", "operator": ">", "value": 2000}
+      ]
+    },
+    {
+      "word": "EMERGENCY",
+      "priority": 1,
+      "conditions": [
+        {"sensor": "v1", "operator": ">", "value": 3000},
+        {"sensor": "v2", "operator": ">", "value": 3000},
+        {"sensor": "v3", "operator": ">", "value": 3000}
+      ]
+    }
+  ]
+}
